@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffd9ec">
+<title>自律＆勇氣挑戰</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;color:#56486c;background:linear-gradient(#b9eaff 0 24%,#f8dcef 24% 100%);min-height:100vh}
+.wrap{max-width:720px;margin:auto;padding:22px 15px 50px}.hero{text-align:center;background:#ffffffdd;border:4px solid white;border-radius:30px;padding:20px 15px;box-shadow:0 9px 0 #e5b9d7}
+h1{margin:0;color:#ee6baa;font-size:32px;letter-spacing:2px}.sub{font-weight:750;margin-top:7px}.count{font-size:43px;font-weight:900;color:#627bd4;margin:10px 0 5px}
+.bar{height:17px;background:#eee;border-radius:20px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#ff8fc4,#ffd84d);transition:.35s}
+.card{margin-top:18px;background:#ffffffeb;border-radius:27px;padding:17px;box-shadow:0 8px 0 #e5b9d7}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.star{aspect-ratio:1;border:0;background:#e9e6ed;clip-path:polygon(50% 2%,61% 36%,97% 36%,68% 57%,79% 92%,50% 71%,21% 92%,32% 57%,3% 36%,39% 36%);font-weight:900;color:#8c8493;font-size:14px}
+.star.on{background:#ffd84d;color:#946a00;filter:drop-shadow(0 3px 2px #e4b62d)}.star.next{animation:p 1.4s infinite}@keyframes p{50%{transform:scale(1.12)}}
+.action{width:100%;border:0;border-radius:17px;padding:15px;margin-top:16px;background:#ee6baa;color:white;font-size:18px;font-weight:900;box-shadow:0 5px 0 #c94e8b}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;font-size:13px}.legend div{background:#fff8;border-radius:13px;padding:9px}.tools{display:flex;gap:8px;margin-top:12px}.tools button{flex:1;border:0;border-radius:12px;padding:10px;background:white;color:#665674;font-weight:750}
+.foot{text-align:center;font-size:12px;margin-top:13px}.done{display:none;font-size:21px;font-weight:900;color:#ee6baa;margin-top:12px}.done.show{display:block}
+.modal{display:none;position:fixed;inset:0;background:#57446788;align-items:flex-end;justify-content:center;z-index:5}.modal.show{display:flex}.sheet{background:white;width:min(720px,100%);border-radius:27px 27px 0 0;padding:21px 17px max(24px,env(safe-area-inset-bottom))}
+.sheet h2{margin:0 0 13px;color:#ee6baa}.types{display:grid;grid-template-columns:1fr 1fr;gap:8px}.type{border:2px solid #eee;background:white;border-radius:13px;padding:11px;font-weight:800;color:#56486c}.type.sel{border-color:#ee6baa;background:#fff0f7}
+label{display:block;font-size:13px;font-weight:800;margin:13px 0 5px}input,textarea{width:100%;border:2px solid #eadfeb;border-radius:13px;padding:11px;font:inherit}textarea{min-height:75px}.row{display:flex;gap:7px;margin-top:14px}.row button{flex:1;border:0;border-radius:13px;padding:12px;font-weight:900}.save{background:#ee6baa;color:white}.cancel{background:#eee}.delete{background:#fff0f0;color:#bd4c4c}
+@media(min-width:560px){.grid{grid-template-columns:repeat(10,1fr)}}
+</style></head>
+<body><main class="wrap">
+<section class="hero"><h1>自律 ＆ 勇氣挑戰</h1><div class="sub">練習自律，讓我成為更棒的知晨！</div><div class="count"><span id="n">0</span> / 50 ⭐</div><div class="bar"><div class="fill" id="fill"></div></div><div class="done" id="done">★ 50 星達成！挑戰完成！ ★</div></section>
+<section class="card"><div class="grid" id="grid"></div><button class="action" id="add">＋ 獲得一顆星</button>
+<div class="legend"><div>🧠 自律力<br>時間到自己停止、開始該做的事</div><div>🔥 勇氣力<br>害怕或困難，還是願意試</div><div>💪 堅持力<br>做不到也不放棄，再試一次</div><div>🌱 主動力<br>不用一直提醒，自己開始</div></div>
+<div class="tools"><button id="export">備份紀錄</button><button id="import">匯入備份</button></div><input id="file" type="file" accept=".json" hidden>
+<div class="foot">點亮的星星可以再點開查看或修改。紀錄會保存在這台裝置的瀏覽器。</div></section></main>
+<div class="modal" id="modal"><div class="sheet"><h2 id="mh"></h2><div class="types">
+<button class="type" data-t="🧠 自律力">🧠 自律力</button><button class="type" data-t="🔥 勇氣力">🔥 勇氣力</button><button class="type" data-t="💪 堅持力">💪 堅持力</button><button class="type" data-t="🌱 主動力">🌱 主動力</button></div>
+<label>日期</label><input type="date" id="date"><label>今天為什麼得到這顆星？</label><textarea id="note" placeholder="例如：時間到自己關掉電視，沒有拖延！"></textarea>
+<div class="row"><button class="cancel" id="cancel">取消</button><button class="delete" id="del">刪除</button><button class="save" id="save">存下這顆星</button></div></div></div>
+<script>
+const K="zichen-star-challenge-v1";let data=JSON.parse(localStorage.getItem(K)||"[]"),editing=null,typ="";const $=x=>document.querySelector(x);
+function today(){let d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
+function render(){let g=$("#grid");g.innerHTML="";for(let i=0;i<50;i++){let b=document.createElement("button");b.className="star"+(data[i]?" on":"")+(!data[i]&&i===data.length?" next":"");b.textContent=i+1;b.onclick=()=>data[i]?openStar(i):i===data.length&&openStar(i);g.appendChild(b)}$("#n").textContent=data.length;$("#fill").style.width=(data.length*2)+"%";$("#done").classList.toggle("show",data.length>=50);$("#add").disabled=data.length>=50;localStorage.setItem(K,JSON.stringify(data))}
+function openStar(i){editing=i;let x=data[i];typ=x?.type||"";$("#mh").textContent=(x?"第 ":"獲得第 ")+(i+1)+" 顆星 ⭐";$("#date").value=x?.date||today();$("#note").value=x?.note||"";document.querySelectorAll(".type").forEach(b=>b.classList.toggle("sel",b.dataset.t===typ));$("#del").style.display=x?"block":"none";$("#modal").classList.add("show")}
+document.querySelectorAll(".type").forEach(b=>b.onclick=()=>{typ=b.dataset.t;document.querySelectorAll(".type").forEach(q=>q.classList.toggle("sel",q===b))});
+$("#add").onclick=()=>openStar(data.length);$("#cancel").onclick=()=>$("#modal").classList.remove("show");
+$("#save").onclick=()=>{if(!typ){alert("先選一種今天使用的力量喔！");return}data[editing]={type:typ,date:$("#date").value,note:$("#note").value.trim()};$("#modal").classList.remove("show");render()};
+$("#del").onclick=()=>{if(confirm("要刪除這顆星的紀錄嗎？")){data.splice(editing,1);$("#modal").classList.remove("show");render()}};
+$("#export").onclick=()=>{let a=document.createElement("a");let u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.href=u;a.download="自律勇氣挑戰備份.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};
+$("#import").onclick=()=>$("#file").click();$("#file").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;data=x.slice(0,50);render();alert("備份已匯入！")}catch{alert("這個備份檔讀不到喔")}};r.readAsText(f)};
+$("#modal").onclick=e=>{if(e.target.id==="modal")$("#modal").classList.remove("show")};render();
+</script></body></html>
