@@ -1,1 +1,1 @@
-# -star-challenge
+star-challenge
